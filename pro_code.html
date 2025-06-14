@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecurePassX | Password Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; }
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white min-h-screen flex flex-col">
+
+  <!-- Hero -->
+  <section class="flex flex-col justify-center items-center text-center pt-24 pb-12 px-4" data-aos="zoom-in">
+    <h1 class="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg animate-pulse">SecurePassX</h1>
+    <p class="mt-4 text-xl text-gray-300">Pro Password Generator</p>
+    <a href="#generator" class="mt-8 inline-block px-8 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-full font-semibold transition duration-200 shadow-lg hover:shadow-cyan-500/50">Generate Now</a>
+  </section>
+
+  <!-- Generator -->
+  <section id="generator" class="flex-grow flex items-center justify-center px-4 pb-20">
+    <div class="glass max-w-lg w-full p-8 rounded-2xl shadow-2xl" data-aos="fade-up" data-aos-delay="200">
+      <h2 class="text-3xl font-bold text-cyan-400 mb-6 text-center">🔐 Generate Your Password</h2>
+
+      <label class="block mb-1">Password Length</label>
+      <input id="length" type="range" min="4" max="32" value="12"
+             class="w-full mb-3 accent-cyan-500" oninput="lengthOutput.value=this.value">
+      <output id="lengthOutput" class="block text-center mb-4 text-lg">12</output>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <label class="flex items-center gap-2 bg-gray-800/60 p-3 rounded-lg hover:scale-105 transition">
+          <input type="checkbox" id="uppercase" class="accent-cyan-500" checked>
+          <span>Uppercase</span>
+        </label>
+        <label class="flex items-center gap-2 bg-gray-800/60 p-3 rounded-lg hover:scale-105 transition">
+          <input type="checkbox" id="numbers" class="accent-cyan-500" checked>
+          <span>Numbers</span>
+        </label>
+        <label class="flex items-center gap-2 bg-gray-800/60 p-3 rounded-lg hover:scale-105 transition">
+          <input type="checkbox" id="symbols" class="accent-cyan-500">
+          <span>Symbols</span>
+        </label>
+      </div>
+
+      <button onclick="generatePassword()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 rounded-full font-semibold shadow-lg transition active:scale-95">🔄 Generate Password</button>
+
+      <div class="mt-6 bg-gray-800/60 p-4 rounded-lg text-center break-all" data-aos="fade-in" data-aos-delay="400">
+        <p class="text-sm text-gray-400 mb-1">Your Secure Password</p>
+        <p id="output" class="font-mono text-lg text-yellow-300">Click Generate</p>
+      </div>
+
+      <button onclick="copyToClipboard()" class="mt-4 w-full py-3 bg-green-600 hover:bg-green-700 rounded-full font-semibold shadow hover:shadow-green-600/50 transition">📋 Copy to Clipboard</button>
+    </div>
+  </section>
+
+  <footer class="text-center py-6 text-sm text-gray-500">© 2025 Muthukrishnan • SecurePassX</footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 700, once: true });</script>
+
+  <script>
+    function generatePassword() {
+      const length = parseInt(document.getElementById('length').value);
+      const useUpper = document.getElementById('uppercase').checked;
+      const useNum = document.getElementById('numbers').checked;
+      const useSym = document.getElementById('symbols').checked;
+
+      const lower = 'abcdefghijklmnopqrstuvwxyz';
+      const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const numbers = '0123456789';
+      const symbols = '!@#$%^&*()_+=-{}[]<>?';
+
+      let chars = lower;
+      if (useUpper) chars += upper;
+      if (useNum) chars += numbers;
+      if (useSym) chars += symbols;
+
+      let password = '';
+      for (let i = 0; i < length; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+
+      document.getElementById('output').textContent = password;
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('output').textContent;
+      if (!text || text === 'Click Generate') {
+        alert('Generate a password first!');
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Password copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>
